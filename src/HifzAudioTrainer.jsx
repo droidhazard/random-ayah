@@ -2,7 +2,7 @@
 import { useState, useRef } from "react";
 import "./App.css";
 
-const MAX_AYAH = 93; // Set this to the number of ayahs in the Juzz
+const MAX_AYAH = 178; // Set this to the number of ayahs in the Juzz
 const AUDIO_FOLDER = "/audio/juzz25"; // Update to match your public folder structure
 
 export default function HifzAudioTrainer() {
