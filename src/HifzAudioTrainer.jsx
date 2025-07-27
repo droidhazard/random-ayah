@@ -1,11 +1,19 @@
 // HifzAudioTrainer.jsx
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import "./App.css";
 
-const MAX_AYAH = 178; // Set this to the number of ayahs in the Juzz
-const AUDIO_FOLDER = "/audio/juzz25"; // Update to match your public folder structure
+const MAX_AYAH = 227;
+const AUDIO_FOLDER = "/audio/juzz25";
+
+function shuffleArray(array) {
+  return array
+    .map((value) => ({ value, sort: Math.random() }))
+    .sort((a, b) => a.sort - b.sort)
+    .map(({ value }) => value);
+}
 
 export default function HifzAudioTrainer() {
+  const [playlist, setPlaylist] = useState(() => shuffleArray([...Array(MAX_AYAH).keys()].map(i => i + 1)));
   const [currentAyah, setCurrentAyah] = useState(null);
   const audioRef = useRef(null);
 
@@ -14,11 +22,19 @@ export default function HifzAudioTrainer() {
   };
 
   const playRandomAyah = () => {
-    const randomNumber = Math.floor(Math.random() * MAX_AYAH) + 1;
-    setCurrentAyah(randomNumber);
-    if (audioRef.current) {
-      audioRef.current.src = getAyahFilename(randomNumber);
-      audioRef.current.play();
+    if (playlist.length === 0) {
+      // Reshuffle when all ayahs are played
+      const reshuffled = shuffleArray([...Array(MAX_AYAH).keys()].map(i => i + 1));
+      setPlaylist(reshuffled);
+    } else {
+      const nextAyah = playlist[0];
+      setCurrentAyah(nextAyah);
+      setPlaylist(prev => prev.slice(1)); // Remove it from the list
+
+      if (audioRef.current) {
+        audioRef.current.src = getAyahFilename(nextAyah);
+        audioRef.current.play();
+      }
     }
   };
 
@@ -47,9 +63,10 @@ export default function HifzAudioTrainer() {
         </button>
       </div>
       <audio ref={audioRef} controls className="w-full" />
-      {/* {currentAyah && (
-        <p className="mt-2 text-gray-600">Playing ayah #{currentAyah}</p>
-      )} */}
+      {currentAyah && (
+        <p className="mt-2 text-gray-600">Playing ayah #{}</p>
+      )}
     </div>
   );
 }
+
