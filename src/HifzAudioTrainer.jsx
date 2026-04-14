@@ -2,9 +2,11 @@
 import { useState, useRef, useEffect } from "react";
 import "./App.css";
 
-const MAX_AYAH = 227;
-const AUDIO_FOLDER = "/audio/juzz25";
-
+const MAX_AYAH = 384;
+// 2265 for 23 to 30
+// 384 for 23
+//const AUDIO_FOLDER = "/audio/23to30";
+const AUDIO_FOLDER = "/audio/juzz23";
 function shuffleArray(array) {
   return array
     .map((value) => ({ value, sort: Math.random() }))
@@ -34,6 +36,7 @@ export default function HifzAudioTrainer() {
       if (audioRef.current) {
         audioRef.current.src = getAyahFilename(nextAyah);
         audioRef.current.play();
+        console.log(playlist)
       }
     }
   };
